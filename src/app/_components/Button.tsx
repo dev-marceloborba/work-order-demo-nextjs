@@ -1,6 +1,7 @@
 "use client";
 
 import { ButtonHTMLAttributes, DetailedHTMLProps, ReactNode } from "react";
+import { twMerge } from "tailwind-merge";
 
 type ButtonProps = {
   children: ReactNode;
@@ -26,8 +27,11 @@ export default function Button({
 
   return (
     <button
-      className={`text-white font-bold py-1 px-2 mr-2 rounded bg-${getColor()}-500 hover:bg-${getColor()}-700`}
       {...props}
+      className={twMerge(
+        `text-white font-bold py-1 px-2 mr-2 rounded bg-${getColor()}-500 hover:bg-${getColor()}-700`,
+        props.className
+      )}
     >
       {children}
     </button>

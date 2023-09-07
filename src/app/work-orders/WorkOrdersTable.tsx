@@ -4,9 +4,30 @@ import { useState } from "react";
 import Table from "./_components/Table";
 import Modal from "../_components/Modal";
 import Button from "../_components/Button";
+import WorkOrderFormModal from "./_components/WorkOrderFormModal";
 
 export default function WorkOrdersTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [selectedItem, setSelectedItem] = useState<any>({
+    id: null,
+    name: "",
+    date: null,
+  });
+
+  const handleSelectItem = () => {
+    setSelectedItem({
+      id: 1,
+      name: "Maquina de lavar LG",
+      date: "16/08/2023",
+    });
+    setIsModalOpen(true);
+  };
+
+  const handleDeleteItem = () => {
+    alert("Tem certeza que deseja excluir a Ordem de serviço");
+  };
+
   return (
     <>
       <Table.Root>
@@ -24,15 +45,27 @@ export default function WorkOrdersTable() {
             <Table.Data>Maquina de lavar LG</Table.Data>
             <Table.Data>16/08/2023</Table.Data>
             <Table.Data>
-              <Button color="primary" onClick={() => setIsModalOpen(true)}>
+              <Button color="primary" onClick={() => handleSelectItem()}>
                 Editar
               </Button>
-              <Button color="danger">Excluir</Button>
+              <Button color="danger" onClick={() => handleDeleteItem()}>
+                Excluir
+              </Button>
             </Table.Data>
           </Table.Row>
         </Table.Body>
       </Table.Root>
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <Modal
+        content={
+          <WorkOrderFormModal
+            defaultValues={{ equipmentName: selectedItem.name }}
+            onSubmit={(formData) => console.log(formData)}
+          />
+        }
+        title="Editar ordem de serviço"
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </>
   );
 }
