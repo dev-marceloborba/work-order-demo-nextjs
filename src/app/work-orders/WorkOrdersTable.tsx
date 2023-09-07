@@ -6,6 +6,7 @@ import Modal from "../_components/Modal";
 import Button from "../_components/Button";
 import WorkOrderFormModal from "./_components/WorkOrderFormModal";
 import data from "../_data/data";
+import BadgeStatus from "./_components/BadgeStatus";
 
 export default function WorkOrdersTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,6 +39,7 @@ export default function WorkOrdersTable() {
             <Table.HeaderCell>Id</Table.HeaderCell>
             <Table.HeaderCell>Equipamento</Table.HeaderCell>
             <Table.HeaderCell>Data de criação</Table.HeaderCell>
+            <Table.HeaderCell>Status</Table.HeaderCell>
             <Table.HeaderCell>Ações</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
@@ -47,6 +49,9 @@ export default function WorkOrdersTable() {
               <Table.Data>{id}</Table.Data>
               <Table.Data>{equipmentName}</Table.Data>
               <Table.Data>{date}</Table.Data>
+              <Table.Data>
+                <BadgeStatus />
+              </Table.Data>
               <Table.Data>
                 <Button
                   color="primary"
