@@ -28,10 +28,11 @@ export default function WorkOrderFormModal({
   const {
     handleSubmit,
     control,
-    formState: { isValid },
+    formState: { isValid, errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues,
+    mode: "onChange",
   });
 
   return (
@@ -60,6 +61,11 @@ export default function WorkOrderFormModal({
             />
           )}
         />
+        {errors.equipmentName && (
+          <p className="mt-1 text-red-500 text-xs italic">
+            {errors.equipmentName.message}
+          </p>
+        )}
       </div>
       <Button
         disabled={!isValid}

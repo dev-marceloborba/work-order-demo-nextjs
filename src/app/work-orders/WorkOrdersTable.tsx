@@ -5,6 +5,7 @@ import Table from "./_components/Table";
 import Modal from "../_components/Modal";
 import Button from "../_components/Button";
 import WorkOrderFormModal from "./_components/WorkOrderFormModal";
+import data from "../_data/data";
 
 export default function WorkOrdersTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -15,11 +16,12 @@ export default function WorkOrdersTable() {
     date: null,
   });
 
-  const handleSelectItem = () => {
+  const handleSelectItem = (item: any) => {
+    const { id, equipmentName, date } = item;
     setSelectedItem({
-      id: 1,
-      name: "Maquina de lavar LG",
-      date: "16/08/2023",
+      id,
+      name: equipmentName,
+      date,
     });
     setIsModalOpen(true);
   };
@@ -40,19 +42,24 @@ export default function WorkOrdersTable() {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          <Table.Row>
-            <Table.Data>1</Table.Data>
-            <Table.Data>Maquina de lavar LG</Table.Data>
-            <Table.Data>16/08/2023</Table.Data>
-            <Table.Data>
-              <Button color="primary" onClick={() => handleSelectItem()}>
-                Editar
-              </Button>
-              <Button color="danger" onClick={() => handleDeleteItem()}>
-                Excluir
-              </Button>
-            </Table.Data>
-          </Table.Row>
+          {data.map(({ id, equipmentName, date }: any) => (
+            <Table.Row key={id}>
+              <Table.Data>{id}</Table.Data>
+              <Table.Data>{equipmentName}</Table.Data>
+              <Table.Data>{date}</Table.Data>
+              <Table.Data>
+                <Button
+                  color="primary"
+                  onClick={() => handleSelectItem({ id, equipmentName, date })}
+                >
+                  Editar
+                </Button>
+                <Button color="danger" onClick={() => handleDeleteItem()}>
+                  Excluir
+                </Button>
+              </Table.Data>
+            </Table.Row>
+          ))}
         </Table.Body>
       </Table.Root>
       <Modal
