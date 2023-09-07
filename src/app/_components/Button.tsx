@@ -19,9 +19,9 @@ export default function Button({
   const getColor = () => {
     switch (color) {
       case "primary":
-        return "blue";
+        return "bg-blue-500 hover:bg-blue-700";
       case "danger":
-        return "red";
+        return "bg-red-500 hover:bg-red-700";
     }
   };
 
@@ -29,7 +29,7 @@ export default function Button({
     <button
       {...props}
       className={twMerge(
-        `text-white font-bold py-1 px-2 mr-2 rounded bg-${getColor()}-500 hover:bg-${getColor()}-700`,
+        `text-white font-bold py-1 px-2 mr-2 rounded ${getColor()}`,
         props.className
       )}
     >
