@@ -17,8 +17,6 @@ const links = [
 export default function Sidebar() {
   const pathname = usePathname();
 
-  console.log(pathname);
-
   return (
     <aside className="w-64 min-h-screen bg-gray-800 text-white">
       <nav className="mt-10">

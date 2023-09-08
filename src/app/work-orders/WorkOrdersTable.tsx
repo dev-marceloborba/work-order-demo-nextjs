@@ -5,10 +5,10 @@ import Table from "./_components/Table";
 import Modal from "../_components/Modal";
 import Button from "../_components/Button";
 import WorkOrderFormModal from "./_components/WorkOrderFormModal";
-import data from "../_data/data";
+
 import BadgeStatus from "./_components/BadgeStatus";
 
-export default function WorkOrdersTable() {
+export default function WorkOrdersTable({ data }: { data: any }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [selectedItem, setSelectedItem] = useState<any>({
@@ -70,7 +70,7 @@ export default function WorkOrdersTable() {
       <Modal
         content={
           <WorkOrderFormModal
-            defaultValues={{ equipmentName: selectedItem.name }}
+            defaultValues={selectedItem}
             onSubmit={(formData) => console.log(formData)}
           />
         }
