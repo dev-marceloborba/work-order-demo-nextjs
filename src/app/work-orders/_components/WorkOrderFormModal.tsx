@@ -2,20 +2,26 @@
 
 import { useForm, Controller, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { object, string } from "zod";
+import { object, string, date } from "zod";
 import Button from "@/app/_components/Button";
 import Input from "@/app/_components/Input";
+import TextArea from "@/app/_components/TextArea";
 
 const schema = object({
   equipmentName: string()
     .min(2, "Nome muito curto")
     .max(50, "Nome muito longo")
     .nonempty("Campo obrigatório"),
+  description: string()
+    .max(200, "Descrição muito longa")
+    .nonempty("Campo obrigatório"),
+  target: string().nonempty(),
 });
 
 type FormData = {
   equipmentName: string;
   description: string;
+  target: Date;
 };
 
 type WorkOrderFormProps = {
@@ -49,13 +55,13 @@ export default function WorkOrderFormModal({
           name="equipmentName"
           className="mb-4"
         />
-        <Input
+        <Input label="Data alvo" type="date" name="target" className="mb-4" />
+        <TextArea
+          rows={4}
           label="Descrição"
-          type="text"
           name="description"
           className="mb-4"
         />
-        <Input label="Data alvo" type="date" name="target" className="mb-4" />
         <Button
           disabled={!isValid}
           type="submit"

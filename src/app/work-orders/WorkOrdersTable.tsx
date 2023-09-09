@@ -7,24 +7,22 @@ import Button from "../_components/Button";
 import WorkOrderFormModal from "./_components/WorkOrderFormModal";
 
 import BadgeStatus from "./_components/BadgeStatus";
-import { WorkOrder } from "./_models/work-order";
+import { EWorkOrderStatus, WorkOrder } from "./_models/work-order";
 
 export default function WorkOrdersTable({ data }: { data: WorkOrder[] }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [selectedItem, setSelectedItem] = useState<any>({
-    id: null,
-    name: "",
-    date: null,
+  const [selectedItem, setSelectedItem] = useState<WorkOrder>({
+    id: 0,
+    equipmentName: "",
+    target: new Date(),
+    description: "",
+    createdAt: new Date(),
+    workOrderStatus: EWorkOrderStatus.IN_EXECUTION,
   });
 
-  const handleSelectItem = (item: any) => {
-    const { id, equipmentName, date } = item;
-    setSelectedItem({
-      id,
-      name: equipmentName,
-      date,
-    });
+  const handleSelectItem = (item: WorkOrder) => {
+    setSelectedItem(item);
     setIsModalOpen(true);
   };
 
@@ -46,30 +44,25 @@ export default function WorkOrdersTable({ data }: { data: WorkOrder[] }) {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {data.map(
-            ({ id, equipmentName, createdAt, target, workOrderStatus }) => (
-              <Table.Row key={id}>
-                <Table.Data>{id}</Table.Data>
-                <Table.Data>{equipmentName}</Table.Data>
-                <Table.Data>{createdAt?.toISOString()}</Table.Data>
-                <Table.Data>{target?.toISOString()}</Table.Data>
-                <Table.Data>
-                  <BadgeStatus status={workOrderStatus} />
-                </Table.Data>
-                <Table.Data>
-                  <Button
-                    color="primary"
-                    // onClick={() => handleSelectItem({ id, equipmentName, date })}
-                  >
-                    Editar
-                  </Button>
-                  <Button color="danger" onClick={() => handleDeleteItem()}>
-                    Excluir
-                  </Button>
-                </Table.Data>
-              </Table.Row>
-            )
-          )}
+          {data.map((item) => (
+            <Table.Row key={item.id}>
+              <Table.Data>{item.id}</Table.Data>
+              <Table.Data>{item.equipmentName}</Table.Data>
+              <Table.Data>{item.createdAt?.toISOString()}</Table.Data>
+              <Table.Data>{item.target?.toISOString()}</Table.Data>
+              <Table.Data>
+                <BadgeStatus status={item.workOrderStatus} />
+              </Table.Data>
+              <Table.Data>
+                <Button color="primary" onClick={() => handleSelectItem(item)}>
+                  Editar
+                </Button>
+                <Button color="danger" onClick={() => handleDeleteItem()}>
+                  Excluir
+                </Button>
+              </Table.Data>
+            </Table.Row>
+          ))}
         </Table.Body>
       </Table.Root>
       <Modal
