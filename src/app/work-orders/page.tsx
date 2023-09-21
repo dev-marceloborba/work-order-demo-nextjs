@@ -1,12 +1,13 @@
-import PageTitle from "../_components/PageTitle";
+import Content from "./Content";
 import WorkOrdersTable from "./WorkOrdersTable";
 import { WorkOrder } from "./_models/work-order";
 
 async function getData() {
-  const res = await fetch("http://localhost:5114/v1/work-orders", {
+  const res = await fetch("http://localhost:5114/api/v1/work-orders", {
     next: {
       tags: ["work-order"],
     },
+    cache: "no-store",
   });
 
   if (!res.ok) {
@@ -17,10 +18,9 @@ async function getData() {
 
 export default async function WorkOrders() {
   const data = (await getData()) as WorkOrder[];
-  console.log(data);
   return (
     <div>
-      <PageTitle>Ordens de serviço</PageTitle>
+      <Content />
       <WorkOrdersTable data={data} />
     </div>
   );

@@ -7,27 +7,60 @@ import Button from "../_components/Button";
 import WorkOrderFormModal from "./_components/WorkOrderFormModal";
 
 import BadgeStatus from "./_components/BadgeStatus";
-import { EWorkOrderStatus, WorkOrder } from "./_models/work-order";
+import { WorkOrder } from "./_models/work-order";
+import { useRouter } from "next/navigation";
+import dateUtils from "../_utils/dateUtils";
 
 export default function WorkOrdersTable({ data }: { data: WorkOrder[] }) {
+  const { refresh } = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const [selectedItem, setSelectedItem] = useState<WorkOrder>({
-    id: 0,
-    equipmentName: "",
-    target: new Date(),
-    description: "",
-    createdAt: new Date(),
-    workOrderStatus: EWorkOrderStatus.IN_EXECUTION,
-  });
+  const [selectedItem, setSelectedItem] = useState<WorkOrder | undefined>();
 
   const handleSelectItem = (item: WorkOrder) => {
     setSelectedItem(item);
     setIsModalOpen(true);
   };
 
-  const handleDeleteItem = () => {
-    alert("Tem certeza que deseja excluir a Ordem de serviço");
+  const handleUpdateItem = async (item: Partial<WorkOrder>) => {
+    try {
+      var result = await fetch(
+        `http://localhost:5114/api/v1/work-orders/${item.id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "PUT",
+          body: JSON.stringify(item),
+        }
+      );
+
+      if (result.ok) {
+        refresh();
+        setIsModalOpen(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDeleteItem = async ({ id }: WorkOrder) => {
+    const confirm = window.confirm(
+      "Tem certeza que deseja excluir a Ordem de serviço?"
+    );
+    if (!confirm) return;
+    try {
+      const result = await fetch(
+        `http://localhost:5114/api/v1/work-orders/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (result.ok) {
+        refresh();
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -48,8 +81,12 @@ export default function WorkOrdersTable({ data }: { data: WorkOrder[] }) {
             <Table.Row key={item.id}>
               <Table.Data>{item.id}</Table.Data>
               <Table.Data>{item.equipmentName}</Table.Data>
-              <Table.Data>{item.createdAt?.toISOString()}</Table.Data>
-              <Table.Data>{item.target?.toISOString()}</Table.Data>
+              <Table.Data>
+                {dateUtils.formatDate(new Date(item.createdAt))}
+              </Table.Data>
+              <Table.Data>
+                {dateUtils.formatDate(new Date(item.target))}
+              </Table.Data>
               <Table.Data>
                 <BadgeStatus status={item.workOrderStatus} />
               </Table.Data>
@@ -57,7 +94,7 @@ export default function WorkOrdersTable({ data }: { data: WorkOrder[] }) {
                 <Button color="primary" onClick={() => handleSelectItem(item)}>
                   Editar
                 </Button>
-                <Button color="danger" onClick={() => handleDeleteItem()}>
+                <Button color="danger" onClick={() => handleDeleteItem(item)}>
                   Excluir
                 </Button>
               </Table.Data>
@@ -68,8 +105,8 @@ export default function WorkOrdersTable({ data }: { data: WorkOrder[] }) {
       <Modal
         content={
           <WorkOrderFormModal
-            defaultValues={selectedItem}
-            onSubmit={(formData) => console.log(formData)}
+            defaultValues={selectedItem!}
+            onSubmit={handleUpdateItem}
           />
         }
         title="Editar ordem de serviço"
